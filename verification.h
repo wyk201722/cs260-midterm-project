@@ -8,7 +8,6 @@
 using namespace std;
 
 
-int THRESHOLD = 8;
 void mm_base(double* c, int n_C,double* a,int n_A,double* b,int n_B,int n) {
    
     /*if(n % 3 == 0) {
@@ -93,7 +92,7 @@ void mm_base(double* c, int n_C,double* a,int n_A,double* b,int n_B,int n) {
     	}*/
     
 }
-void mm_dac(double *C, int n_C,double *A, int n_A,double *B, int n_B,int n)
+void mm_dac(double *C, int n_C,double *A, int n_A,double *B, int n_B,int n,int THRESHOLD)
 { 
 	assert((n & (-n)) == n);
 	if (n <= THRESHOLD) {
@@ -101,15 +100,15 @@ void mm_dac(double *C, int n_C,double *A, int n_A,double *B, int n_B,int n)
 	}
 	else {
 	#define X(M,r,c) (M + (r*(n_ ## M) + c)*(n/2))
-	cilk_spawn mm_dac(X(C,0,0), n_C, X(A,0,0), n_A, X(B,0,0), n_B, n/2);
-	cilk_spawn mm_dac(X(C,0,1), n_C, X(A,0,0), n_A, X(B,0,1), n_B, n/2);
-	cilk_spawn mm_dac(X(C,1,0), n_C, X(A,1,0), n_A, X(B,0,0), n_B, n/2);
-	cilk_spawn mm_dac(X(C,1,1), n_C, X(A,1,0), n_A, X(B,0,1), n_B, n/2);
+	cilk_spawn mm_dac(X(C,0,0), n_C, X(A,0,0), n_A, X(B,0,0), n_B, n/2,THRESHOLD);
+	cilk_spawn mm_dac(X(C,0,1), n_C, X(A,0,0), n_A, X(B,0,1), n_B, n/2,THRESHOLD);
+	cilk_spawn mm_dac(X(C,1,0), n_C, X(A,1,0), n_A, X(B,0,0), n_B, n/2,THRESHOLD);
+		   mm_dac(X(C,1,1), n_C, X(A,1,0), n_A, X(B,0,1), n_B, n/2,THRESHOLD);
 	cilk_sync;
-	cilk_spawn mm_dac(X(C,0,0), n_C, X(A,0,1), n_A, X(B,1,0), n_B, n/2);
-	cilk_spawn mm_dac(X(C,0,1), n_C, X(A,0,1), n_A, X(B,1,1), n_B, n/2);
-	cilk_spawn mm_dac(X(C,1,0), n_C, X(A,1,1), n_A, X(B,1,0), n_B, n/2);
-	cilk_spawn mm_dac(X(C,1,1), n_C, X(A,1,1), n_A, X(B,1,1), n_B, n/2);
+	cilk_spawn mm_dac(X(C,0,0), n_C, X(A,0,1), n_A, X(B,1,0), n_B, n/2,THRESHOLD);
+	cilk_spawn mm_dac(X(C,0,1), n_C, X(A,0,1), n_A, X(B,1,1), n_B, n/2,THRESHOLD);
+	cilk_spawn mm_dac(X(C,1,0), n_C, X(A,1,1), n_A, X(B,1,0), n_B, n/2,THRESHOLD);
+		   mm_dac(X(C,1,1), n_C, X(A,1,1), n_A, X(B,1,1), n_B, n/2,THRESHOLD);
 	cilk_sync;
 	}
 }
@@ -200,19 +199,19 @@ int verify_matrix(const double *C, const double *D, const int m, const int n)
 	for (i = 0; i < m * n; i++)
 	{
 		diff = abs(C[i] - D[i]);
-        if (diff > 1e-3) 
+        	if (diff > 1e-3) 
 		{
 			break;
 		}
 	}
 
 	if (diff > 1e-3) 
-    {
-        return -1;
-    }
-    else
-    {
+    	{
+        	return -1;
+    	}
+    	else
+    	{
         return 0;
-    }
+    	}
     
 }
