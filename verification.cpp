@@ -39,8 +39,8 @@ int main(int argc, char** argv)
 	
 	for(int i = 0; i < n; i++) {
 		for(int j= 0; j < n; j++) {
-			C1[i *n + j] = 1;
-			C2[i *n + j] = 1;
+			C1[i *n + j] = 0;
+			C2[i *n + j] = 0;
 		}
 	}
 	
@@ -66,8 +66,9 @@ int main(int argc, char** argv)
 	printf("Elapsed time, Linear time %lf seconds\n", t3 - t2);	
 	
 
+	
 	if(verify_matrix(C1, C2, n, n) == 0) {
-		cout<<"correct"<<"This two matrix are the same"<<endl;	
+		cout<<"Correct "<<"This two matrix are the same"<<endl;	
 	} else {
 		print_matrix(C1, n ,n);
 		print_matrix(C2, n, n);

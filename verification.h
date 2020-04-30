@@ -10,7 +10,7 @@ using namespace std;
 
 void mm_base(double* c, int n_C,double* a,int n_A,double* b,int n_B,int n) {
    
-    /*if(n % 3 == 0) {
+    if(n % 3 == 0) {
     	for (int i = 0; i < n; i += 3)
     	{
         for (int j = 0; j < n; j += 3)
@@ -58,7 +58,8 @@ void mm_base(double* c, int n_C,double* a,int n_A,double* b,int n_B,int n) {
             c[(i+2)*n_C + j+2] = c22;
             }
         }
-    } //else {*/
+    }  
+    if(n%2 == 0){
 	for(int i = 0; i < n; i += 2) {
 		for(int j = 0; j < n; j += 2) {
 			register double c00 = c[i * n_C + j];
@@ -84,6 +85,7 @@ void mm_base(double* c, int n_C,double* a,int n_A,double* b,int n_B,int n) {
 			 c[(i+1) * n_C + j + 1] = c11;
 			}
 		}
+	}
         /* for (int i = 0; i < n; ++i)
 		for (int k = 0; k < n; ++k)
 			for (int j = 0; j < n; ++j)
@@ -195,7 +197,7 @@ int matrix_copy(double *C, const double *D, const int m, const int n)
 int verify_matrix(const double *C, const double *D, const int m, const int n)
 {
 	int i;
-	double diff;
+	double diff = 0;
 	for (i = 0; i < m * n; i++)
 	{
 		diff = abs(C[i] - D[i]);
